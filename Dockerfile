@@ -2,7 +2,7 @@
 FROM node:18 AS base
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 COPY . .
 
@@ -12,7 +12,7 @@ RUN npm run build
 FROM node:18-alpine AS release
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci
+RUN npm ci --production
 COPY --from=base /app/dist ./dist
 
 CMD ["npm", "start"]
