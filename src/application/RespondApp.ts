@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 import { inject, injectable } from 'inversify';
 import OpenAI from 'openai';
 import ILogger from '../domain/ILogger';
@@ -58,7 +59,7 @@ export class RespondApp {
       if (runStatus.status === REQUIRES_ACTION) {
         await this.handlerAction(runStatus, fromUser);
       } else if (MODEL_COMPLETED.includes(runStatus.status)) {
-        return await this.handleMessage(threadId);
+        return this.handleMessage(threadId);
       }
 
       await sleep(1000);

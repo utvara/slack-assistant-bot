@@ -1,4 +1,3 @@
-import { WebClient } from '@slack/web-api';
 import { inject, injectable } from 'inversify';
 import { isError } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
@@ -18,15 +17,11 @@ export class CreateTicketPlugin implements IPlugin {
     description: z.string(),
   });
 
-  private client: WebClient;
-
   constructor(
-    @inject(SlackClient) app: SlackClient,
+    @inject(SlackClient) private slackApp: SlackClient,
     @inject('ILogger') private logger: ILogger,
     @inject('IConfig') private config: IConfig,
-  ) {
-    this.client = app.client.client;
-  }
+  ) {}
 
   async handleAction(args: unknown, fromUser?: string) {
     this.logger.debug('Creating ticket...', args, fromUser);
@@ -43,7 +38,7 @@ export class CreateTicketPlugin implements IPlugin {
         `:memo: *Description*: \`\`\`${description}\`\`\`\n` +
         `:rocket: *Status*: \`New\``;
 
-      const response = await this.client.chat.postMessage({
+      const response = await this.slackApp.client.client.chat.postMessage({
         channel: this.config.functions.createTicket.channel,
         text: message,
         mrkdwn: true,
@@ -51,9 +46,9 @@ export class CreateTicketPlugin implements IPlugin {
 
       if (response.ok) {
         return { response: 'Ticket created successfully' };
-      } else {
-        return { error: 'Failed to create ticket' };
       }
+
+      return { error: 'Failed to create ticket' };
     } catch (e) {
       this.logger.error(e);
       return { error: isError(e) ? e.message : 'Failed to create ticket' };

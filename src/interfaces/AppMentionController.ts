@@ -37,7 +37,7 @@ export class AppMentionController {
     fromUser,
   }: ISlackRequest) {
     if (this.doesThreadExist(slackThreadId)) {
-      return;
+      return undefined;
     }
 
     const threadId = await this.createNewThread(slackThreadId);

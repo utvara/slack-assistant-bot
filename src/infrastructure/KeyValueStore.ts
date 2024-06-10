@@ -7,9 +7,9 @@ export class KeyValueStore {
 
   constructor(
     @inject('Newable<LocalStorage>')
-    LocalStorage: interfaces.Newable<LocalStorage>,
+    Storage: interfaces.Newable<LocalStorage>,
   ) {
-    this.storage = new LocalStorage('./scratch');
+    this.storage = new Storage('./scratch');
   }
 
   set(key: string, value: string): void {

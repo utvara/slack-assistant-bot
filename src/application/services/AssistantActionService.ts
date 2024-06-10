@@ -13,9 +13,12 @@ export class AssistantActionService {
     this.handlers[handler.name] = handler;
   }
 
-  async process(toolCall?: IRequiredActionFunctionToolCall, fromUser?: string) {
+  async process(
+    toolCall?: IRequiredActionFunctionToolCall,
+    fromUser?: string,
+  ): Promise<string | undefined> {
     if (!toolCall) {
-      return;
+      return undefined;
     }
 
     this.logger.debug('Run requires action. Executing specified function...');

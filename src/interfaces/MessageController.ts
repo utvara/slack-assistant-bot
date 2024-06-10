@@ -42,7 +42,7 @@ export class MessageController {
     const threadId = this.threadMapRepo.get(slackThreadId);
 
     if (!threadId) {
-      return;
+      return undefined;
     }
 
     this.logger.debug(`Got a thread with a mention: ${threadId}`);
