@@ -4,6 +4,7 @@ import { RespondApp } from '../application/RespondApp';
 import ILogger from '../domain/ILogger';
 import ISlackRequest from '../domain/entities/dto/ISlackRequest';
 import IThreadMapRepo from '../domain/interfaces/IThreadMapRepo';
+import { captureError } from '../domain/logger';
 import { slackRequestFactory } from '../domain/slackRequestFactory';
 
 @injectable()
@@ -14,6 +15,7 @@ export class MessageController {
     @inject('ILogger') private logger: ILogger,
   ) {}
 
+  @captureError()
   async handleEvent({
     message,
     say,
@@ -21,31 +23,25 @@ export class MessageController {
     message: KnownEventFromType<'message'>;
     say: SayFn;
   }) {
-    try {
-      const request = slackRequestFactory(message);
+    const request = slackRequestFactory(message);
 
-      const response = await this.processMessage(request);
+    const response = await this.processMessage(request);
 
-      if (response) {
-        await say({ text: response, thread_ts: request.slackEventId });
-      }
-    } catch (error) {
-      this.logger.error(error);
+    if (response) {
+      await say({ text: response, thread_ts: request.slackEventId });
     }
   }
 
-  private processMessage({
+  private async processMessage({
     slackThreadId,
     userQuery,
     fromUser,
-  }: ISlackRequest) {
+  }: ISlackRequest): Promise<string | undefined> {
     const threadId = this.threadMapRepo.get(slackThreadId);
 
     if (!threadId) {
       return undefined;
     }
-
-    this.logger.debug(`Got a thread with a mention: ${threadId}`);
 
     return this.respondApp.processAndRespond(threadId, userQuery, fromUser);
   }

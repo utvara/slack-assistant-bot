@@ -82,7 +82,7 @@ describe('AppMentionController', () => {
 
       await appMentionController.handleEvent({ event, say });
 
-      expect(logger.error).toHaveBeenCalledWith(error);
+      expect(logger.error).toHaveBeenCalledWith('handleEvent', error);
       expect(say).not.toHaveBeenCalled();
     });
   });

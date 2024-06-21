@@ -14,6 +14,7 @@ import { KeyValueStore } from './infrastructure/KeyValueStore';
 import { OpenAIClient } from './infrastructure/OpenAIClient';
 import { SlackClient } from './infrastructure/SlackClient';
 import { buildConfig } from './infrastructure/config';
+import { HealthCheckServer } from './infrastructure/healthCheck';
 import { buildLogger } from './infrastructure/logger';
 import { AssistantMessageRepo } from './infrastructure/repo/AssistantMessageRepo';
 import { AssistantRunRepo } from './infrastructure/repo/AssistantRunRepo';
@@ -60,6 +61,8 @@ container.bind(AppMentionController).to(AppMentionController);
 container.bind(MessageController).to(MessageController);
 
 container.bind(RespondApp).to(RespondApp);
+
+container.bind(HealthCheckServer).to(HealthCheckServer);
 
 container.bind(SlackBotApp).to(SlackBotApp);
 

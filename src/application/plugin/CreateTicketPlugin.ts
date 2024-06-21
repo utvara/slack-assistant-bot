@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { IConfig } from '../../domain/IConfig';
 import ILogger from '../../domain/ILogger';
 import { IPlugin } from '../../domain/IPlugin';
+import { logCall } from '../../domain/logger';
 import { SlackClient } from '../../infrastructure/SlackClient';
 
 @injectable()
@@ -23,8 +24,8 @@ export class CreateTicketPlugin implements IPlugin {
     @inject('IConfig') private config: IConfig,
   ) {}
 
+  @logCall('Creating a ticket...', true)
   async handleAction(args: unknown, fromUser?: string) {
-    this.logger.debug('Creating ticket...', args, fromUser);
     try {
       const { subject, typeOfQuestion, description } =
         this.createTicketArgSchema.parse(args);

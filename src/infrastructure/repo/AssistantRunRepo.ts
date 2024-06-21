@@ -5,6 +5,7 @@ import ILogger from '../../domain/ILogger';
 import IAssistantRun from '../../domain/entities/IAssistantRun';
 import IRequiredActionFunctionToolCall from '../../domain/entities/IRequiredActionFunctionToolCall';
 import IAssistantRunRepo from '../../domain/interfaces/IAssistantRunRepo';
+import { logCall, logOutput } from '../../domain/logger';
 import { OpenAIClient } from '../OpenAIClient';
 
 @injectable()
@@ -23,34 +24,31 @@ export class AssistantRunRepo implements IAssistantRunRepo {
     return run.required_action?.submit_tool_outputs.tool_calls[0];
   }
 
+  @logCall('Creating a run to process the thread with the assistant...')
+  @logOutput('Run created.', 'id')
   async create(threadId: string): Promise<IAssistantRun> {
-    this.logger.debug(
-      'Creating a run to process the thread with the assistant...',
-    );
-
     const run = await this.client.beta.threads.runs.create(threadId, {
       assistant_id: this.config.openaiAssistantId,
       model: this.config.openaiModel,
     });
 
-    this.logger.debug(`Run created with ID: ${run.id}`);
-
     return run;
   }
 
+  @logCall('Checking the status of the run...')
+  @logOutput('Run status checked.', 'status')
   async checkStatus(run: IAssistantRun): Promise<IAssistantRun> {
-    this.logger.debug('Checking the status of the run...');
     const newRun = await this.client.beta.threads.runs.retrieve(
       run.thread_id,
       run.id,
     );
-    this.logger.debug(`Current status of the run: ${newRun.status}`);
 
     return newRun;
   }
 
+  @logCall('Submitting the tool call...')
+  @logOutput('Tool call submitted.')
   async submitToolOutput(run: IAssistantRun, output: string): Promise<void> {
-    this.logger.debug('Submitting tool outputs...');
     const toolCall = this.getToolCall(run);
 
     if (!toolCall) {
@@ -69,7 +67,5 @@ export class AssistantRunRepo implements IAssistantRunRepo {
         ],
       },
     );
-
-    this.logger.debug('Tool outputs submitted.');
   }
 }

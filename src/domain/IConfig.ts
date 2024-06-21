@@ -13,6 +13,8 @@ export const configSchema = z.object({
     }),
   }),
   logLevel: z.string().optional(),
+  nodeEnv: z.string().default('development'),
+  healthCheckPort: z.string(),
 });
 
 export type IConfig = z.infer<typeof configSchema>;

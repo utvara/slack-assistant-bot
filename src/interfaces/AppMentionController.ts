@@ -5,6 +5,7 @@ import ILogger from '../domain/ILogger';
 import ISlackRequest from '../domain/entities/dto/ISlackRequest';
 import IAssistantThreadRepo from '../domain/interfaces/IAssistantThreadRepo';
 import IThreadMapRepo from '../domain/interfaces/IThreadMapRepo';
+import { captureError, logOutput } from '../domain/logger';
 import { slackRequestFactory } from '../domain/slackRequestFactory';
 
 @injectable()
@@ -17,17 +18,14 @@ export class AppMentionController {
     @inject('ILogger') private logger: ILogger,
   ) {}
 
+  @captureError()
   async handleEvent({ event, say }: { event: AppMentionEvent; say: SayFn }) {
-    try {
-      const request = slackRequestFactory(event);
+    const request = slackRequestFactory(event);
 
-      const response = await this.processAppMention(request);
+    const response = await this.processAppMention(request);
 
-      if (response) {
-        await say({ text: response, thread_ts: request.slackEventId });
-      }
-    } catch (error) {
-      this.logger.error(error);
+    if (response) {
+      await say({ text: response, thread_ts: request.slackEventId });
     }
   }
 
@@ -35,7 +33,7 @@ export class AppMentionController {
     slackThreadId,
     userQuery,
     fromUser,
-  }: ISlackRequest) {
+  }: ISlackRequest): Promise<string | undefined> {
     if (this.doesThreadExist(slackThreadId)) {
       return undefined;
     }
@@ -45,12 +43,11 @@ export class AppMentionController {
     return this.respondApp.processAndRespond(threadId, userQuery, fromUser);
   }
 
+  @logOutput('New thread created.')
   private async createNewThread(slackThreadId: string) {
     const threadId = await this.assistantThreadRepo.create();
 
     this.threadMapRepo.set(slackThreadId, threadId);
-
-    this.logger.debug(`New thread created: ${threadId}`);
 
     return threadId;
   }

@@ -73,7 +73,7 @@ describe('MessageController', () => {
 
     await messageController.handleEvent({ message, say });
 
-    expect(logger.error).toHaveBeenCalledWith(error);
+    expect(logger.error).toHaveBeenCalledWith('handleEvent', error);
     expect(say).not.toHaveBeenCalled();
   });
 });

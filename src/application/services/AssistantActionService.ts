@@ -2,6 +2,7 @@ import { inject, injectable } from 'inversify';
 import ILogger from '../../domain/ILogger';
 import { IPlugin } from '../../domain/IPlugin';
 import IRequiredActionFunctionToolCall from '../../domain/entities/IRequiredActionFunctionToolCall';
+import { logCall } from '../../domain/logger';
 
 @injectable()
 export class AssistantActionService {
@@ -13,6 +14,7 @@ export class AssistantActionService {
     this.handlers[handler.name] = handler;
   }
 
+  @logCall('Running requires action. Executing specified function...')
   async process(
     toolCall?: IRequiredActionFunctionToolCall,
     fromUser?: string,
@@ -21,7 +23,6 @@ export class AssistantActionService {
       return undefined;
     }
 
-    this.logger.debug('Run requires action. Executing specified function...');
     const functionName = toolCall.function.name;
     const args = JSON.parse(toolCall.function.arguments);
 
@@ -38,6 +39,7 @@ export class AssistantActionService {
     return this.handlers[functionName];
   }
 
+  @logCall('Running function...', true)
   private async executeFunction(
     functionName: string,
     args: unknown,
@@ -50,7 +52,6 @@ export class AssistantActionService {
         response: string;
       }
   > {
-    this.logger.debug('Running function...', functionName, args);
     const plugin = this.getHandler(functionName);
 
     if (!plugin) {

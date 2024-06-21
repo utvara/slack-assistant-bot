@@ -21,6 +21,7 @@ describe('config', () => {
     process.env.SLACK_SIGNING_SECRET = 'test_slack_signing_secret';
     process.env.CREATE_TICKET_SUPPORT_CHANNEL_ID = 'test_channel_id';
     process.env.LOG_LEVEL = 'test_log_level';
+    process.env.HEALTH_CHECK_PORT = '3000';
 
     const config = buildConfig();
 
@@ -37,6 +38,8 @@ describe('config', () => {
         },
       },
       logLevel: 'test_log_level',
+      nodeEnv: 'test',
+      healthCheckPort: '3000',
     });
   });
 });

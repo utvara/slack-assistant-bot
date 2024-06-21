@@ -14,5 +14,7 @@ export function buildConfig(): IConfig {
       },
     },
     logLevel: process.env.LOG_LEVEL,
+    nodeEnv: process.env.NODE_ENV,
+    healthCheckPort: process.env.HEALTH_CHECK_PORT,
   });
 }
