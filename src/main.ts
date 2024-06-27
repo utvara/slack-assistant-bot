@@ -3,7 +3,7 @@ import 'dotenv/config';
 import 'reflect-metadata';
 import { SlackBotApp } from './SlackBotApp';
 import container from './dic';
-import { HealthCheckServer } from './infrastructure/healthCheck';
+import { HealthCheckServer } from './interfaces/HealthCheckServer';
 
 void container.get(HealthCheckServer).start();
 void container.get(SlackBotApp).start();

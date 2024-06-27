@@ -3,7 +3,7 @@ import { mock } from 'jest-mock-extended';
 import request from 'supertest';
 import { IConfig } from '../domain/IConfig';
 import ILogger from '../domain/ILogger';
-import { HealthCheckServer } from './healthCheck';
+import { HealthCheckServer } from './HealthCheckServer';
 
 const container = new Container();
 

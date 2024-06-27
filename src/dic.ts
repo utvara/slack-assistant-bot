@@ -14,13 +14,13 @@ import { KeyValueStore } from './infrastructure/KeyValueStore';
 import { OpenAIClient } from './infrastructure/OpenAIClient';
 import { SlackClient } from './infrastructure/SlackClient';
 import { buildConfig } from './infrastructure/config';
-import { HealthCheckServer } from './infrastructure/healthCheck';
 import { buildLogger } from './infrastructure/logger';
 import { AssistantMessageRepo } from './infrastructure/repo/AssistantMessageRepo';
 import { AssistantRunRepo } from './infrastructure/repo/AssistantRunRepo';
 import { AssistantThreadRepo } from './infrastructure/repo/AssistantThreadRepo';
 import { ThreadMapRepo } from './infrastructure/repo/ThreadMapRepo';
 import { AppMentionController } from './interfaces/AppMentionController';
+import { HealthCheckServer } from './interfaces/HealthCheckServer';
 import { MessageController } from './interfaces/MessageController';
 
 const container = new Container();
