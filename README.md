@@ -8,8 +8,8 @@ This project is a Slack bot that integrates with the OpenAI Assistant API. The b
 
 To install and run the Slack bot, follow these steps:
 
-1. Clone the repository: `git clone https://github.com/utvara/slack-openai-assistant-bot`
-2. Navigate to the project directory: `cd slack-openai-assistant-bot`
+1. Clone the repository: `git clone https://github.com/utvara/slack-assistant-bot`
+2. Navigate to the project directory: `cd slack-assistant-bot`
 3. Install dependencies: `npm install`
 4. Set up the environment variables:
 
