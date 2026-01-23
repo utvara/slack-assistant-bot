@@ -37,7 +37,7 @@
     "@slack/bolt": "^3.18.0",
     "dotenv": "^16.4.5",
     "inversify": "^6.0.2",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "node-localstorage": "^3.0.5",
     "openai": "^4.49.0",
     "pino": "^9.1.0",
